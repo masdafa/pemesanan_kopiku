@@ -234,15 +234,75 @@ flutter test       → All tests passing ✅
 pub get           → All dependencies resolved ✅
 ```
 
+## 📸 Screenshots & UI Preview
+
+### Main Screens
+
+| Screen | Preview |
+|--------|---------|
+| **Splash Screen** | Loading state dengan branding "Kopi Kang Dafa" |
+| **Login Screen** | Authentication dengan email & password validation |
+| **Menu List Screen** | 4 tabs (Kopi, Non Kopi, Spesial, Pastry) dengan search functionality |
+| **Coffee Detail** | Product details dengan size, temperature, topping selection |
+| **Shopping Cart** | Cart items dengan real-time price calculation |
+| **Checkout Flow** | Order summary dengan voucher application |
+| **Rewards Screen** | Points progress bar dengan redeem button |
+| **Order History** | List pesanan dengan status tracking |
+| **Profile Screen** | User info, wallet, points, settings |
+| **Notifications** | In-app notification dengan badge counter |
+
+### Key UI Features
+
+🎨 **Design Highlights:**
+- Branded header dengan "Kopi Kang Dafa" logo (coffee icon dalam circular badge)
+- Gradient brown background (professional color scheme)
+- Bottom navigation bar dengan 4 main sections
+- Card-based layout untuk menu items
+- Image caching dengan fallback icons
+- Smooth animations dan transitions
+- Indonesian localization throughout
+- Responsive design untuk berbagai ukuran layar
+
+📱 **User Experience:**
+- Loading indicators untuk async operations
+- Error dialogs dengan user-friendly messages
+- Success notifications via SnackBar
+- Hero animations untuk product images
+- Real-time cart badge counter
+- Notification badges untuk unread items
+
+### How to View UI
+
+Untuk melihat UI aplikasi, jalankan:
+```bash
+flutter run
+```
+
+Kemudian login dengan:
+- Email: `admin@kopi.com`
+- Password: `admin123`
+
+Explore semua menu dan features melalui bottom navigation bar!
+
 ## 📝 License
 
-Proyek ini adalah bagian dari tugas kuliah Mobile Development.
+Proyek ini adalah bagian dari tugas kuliah Mobile Development (UTS Flutter).
 
 ## 👨‍💻 Author
 
 **Dafa Yunidar**
 
+📚 **Education:**
+- Universitas: Universitas Bina Bangsa
+- Semester: 5
+- Program: Mobile Development
+- Project: UTS Flutter
+
+💬 **Message:**
+> "Kopi Kang Dafa adalah project UTS Flutter saya. Mohon maaf atas segala kekurangannya. Terima kasih telah meluangkan waktu untuk melihat dan mengevaluasi project ini. Semoga bermanfaat! Cheers! ☕"
+
 ---
 
-**Last Updated**: December 4, 2025
-**Project Status**: ✅ Production Ready
+**Last Updated**: December 4, 2025  
+**Project Status**: ✅ Production Ready  
+**Version**: 1.0.0
