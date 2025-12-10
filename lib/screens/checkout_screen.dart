@@ -16,9 +16,22 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   String _selectedPaymentMethod = 'wallet';
+  final TextEditingController _addressController = TextEditingController();
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
+  }
 
   void _completeOrder(CartProvider cart, UserProvider user, OrderProvider order, BuildContext context) {
-    final double finalPrice = cart.totalAmount;
+    if (cart.isDelivery && cart.deliveryAddress.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Harap masukkan alamat pengiriman.'), backgroundColor: Colors.red));
+        return;
+    }
+
+    final double finalPrice = cart.finalTotalAmount;
     final cartItems = cart.items.values.toList();
     final voucher = cart.currentVoucher?.code ?? '';
 
@@ -31,20 +44,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       user.deductFromWallet(finalPrice);
     } 
 
-    // 1. Tambahkan Pesanan Baru ke Riwayat & Mulai Tracking
     order.addOrder(cartItems, finalPrice, voucher);
-    
-    // 2. Berikan Poin Reward
     user.addPoints(50); 
-    
-    // 3. Kosongkan Keranjang
     cart.clearCart(); 
 
-    // 4. Navigasi ke Halaman Tracking
     final String newOrderId = order.orderHistory.first.id;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => OrderTrackingScreen(orderId: newOrderId)),
-      (Route<dynamic> route) => route.isFirst, // Kembali ke main tabs screen
+      (Route<dynamic> route) => route.isFirst,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -72,18 +79,78 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Lokasi
-                  const Text('Lokasi Pengambilan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Card(
-                    elevation: 1,
-                    child: ListTile(
-                      leading: Icon(Icons.location_on, color: Colors.brown.shade700),
-                      title: const Text('Fore Coffee - Mall ABC'),
-                      subtitle: const Text('Ambil sekarang (~15 menit)'),
-                      trailing: const Icon(Icons.edit, size: 16),
-                      onTap: () { /* Edit Lokasi */ },
+                  // --- TOGGLE PICKUP / DELIVERY ---
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Row(
+                      children: [
+                        _buildToggleOption(cart, "Pickup", false),
+                        _buildToggleOption(cart, "Delivery", true),
+                      ],
                     ),
                   ),
+
+                  // --- LOCATION / ADDRESS SECTION ---
+                  const Text('Lokasi Pengambilan / Pengiriman', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  
+                  if (!cart.isDelivery)
+                    // PICKUP INFO
+                    Card(
+                      elevation: 1,
+                      child: ListTile(
+                        leading: Icon(Icons.store, color: Colors.brown.shade700),
+                        title: const Text('Kopi Kang Dafa'),
+                        subtitle: const Text('Veteran No.87 Serang-Banten'),
+                        trailing: const Icon(Icons.edit, size: 16),
+                        onTap: () { /* Edit Store Location */ },
+                      ),
+                    )
+                  else
+                    // DELIVERY ADDRESS INPUT
+                    Card(
+                      elevation: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Alamat Pengiriman', style: TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _addressController,
+                              decoration: InputDecoration(
+                                hintText: 'Masukkan alamat lengkap...',
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.my_location, color: Colors.blue),
+                                  onPressed: () {
+                                    // Simulate getting location
+                                    setState(() {
+                                      _addressController.text = "Jl. Raya Serang No. 123, Banten (Lokasi Saya)";
+                                      cart.updateDeliveryAddress(_addressController.text);
+                                    });
+                                  },
+                                ),
+                              ),
+                              onChanged: (val) {
+                                cart.updateDeliveryAddress(val);
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            if (cart.deliveryFee > 0)
+                               Text('Biaya Ongkir: Rp ${cart.deliveryFee.toStringAsFixed(0)}', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  
                   const SizedBox(height: 20),
 
                   // Metode Pembayaran
@@ -131,9 +198,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildSummaryRow('Subtotal Item', cart.subTotalAmount),
-                _buildSummaryRow('Diskon Voucher', -cart.discountAmount, isDiscount: true),
+                if (cart.discountAmount > 0)
+                  _buildSummaryRow('Diskon Voucher', -cart.discountAmount, isDiscount: true),
+                if (cart.isDelivery)
+                   _buildSummaryRow('Ongkos Kirim', cart.deliveryFee),
+                
                 const Divider(thickness: 1.5, height: 20),
-                _buildSummaryRow('Total Pembayaran', cart.totalAmount, isTotal: true),
+                _buildSummaryRow('Total Pembayaran', cart.finalTotalAmount, isTotal: true),
                 const SizedBox(height: 15),
                 
                 ElevatedButton(
@@ -144,12 +215,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: Text('BAYAR SEKARANG - Rp ${cart.totalAmount.toStringAsFixed(0)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text('BAYAR SEKARANG - Rp ${cart.finalTotalAmount.toStringAsFixed(0)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildToggleOption(CartProvider cart, String label, bool isDeliveryOption) {
+    final bool isSelected = (cart.isDelivery == isDeliveryOption);
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          cart.setDelivery(isDeliveryOption);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))] : [],
+          ),
+          child: Center(
+            child: Text(
+              label, 
+              style: TextStyle(
+                fontWeight: FontWeight.bold, 
+                color: isSelected ? Colors.brown.shade700 : Colors.grey
+              )
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -31,32 +31,48 @@ class _MainTabsScreenState extends State<MainTabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
       body: _pages[_selectedPageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectPage,
-        currentIndex: _selectedPageIndex,
-        selectedItemColor: Colors.brown.shade700,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_cafe_outlined),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Pesanan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.discount_outlined),
-            label: 'Voucher',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Akun',
-          ),
-        ],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          labelTextStyle: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF6F4E37));
+            }
+            return TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.grey.shade600);
+          }),
+        ),
+        child: NavigationBar(
+          onDestinationSelected: _selectPage,
+          selectedIndex: _selectedPageIndex,
+          elevation: 5,
+          backgroundColor: Colors.white,
+          indicatorColor: const Color(0xFFFFCC80), // Warna indikator oranye muda yang ceria
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.coffee_outlined),
+              selectedIcon: Icon(Icons.coffee, color: Color(0xFF5D4037)),
+              label: 'Menu',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.receipt_long_outlined),
+              selectedIcon: Icon(Icons.receipt_long, color: Color(0xFF5D4037)),
+              label: 'Pesanan',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.confirmation_number_outlined),
+              selectedIcon: Icon(Icons.confirmation_number, color: Color(0xFF5D4037)),
+              label: 'Promo', // Ubah label biar lebih menarik
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle, color: Color(0xFF5D4037)),
+              label: 'Akun',
+            ),
+          ],
+        ),
       ),
     );
   }

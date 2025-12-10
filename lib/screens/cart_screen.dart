@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:cached_network_image/cached_network_image.dart'; // Hapus
 import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
 import 'checkout_screen.dart';
@@ -43,7 +44,8 @@ class CartItemWidget extends StatelessWidget {
           child: ListTile(
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(cartItem.coffee.imageUrl, width: 60, height: 60, fit: BoxFit.cover),
+              // Ganti ke Image.asset
+              child: Image.asset(cartItem.coffee.imageUrl, width: 60, height: 60, fit: BoxFit.cover),
             ),
             title: Text(cartItem.coffee.name, style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(
@@ -125,6 +127,7 @@ class CartScreen extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.discount_outlined, color: Colors.brown.shade700),
                       title: Text(cart.currentVoucher != null ? cart.currentVoucher!.title : 'Gunakan Voucher'),
+                      subtitle: cart.currentVoucher != null ? Text(cart.currentVoucher!.code, style: const TextStyle(color: Colors.green)) : null,
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => const VoucherSelectionScreen()));
@@ -133,10 +136,12 @@ class CartScreen extends StatelessWidget {
 
                     // Detail Harga
                     const Divider(),
-                    _buildSummaryRow('Subtotal Item', cart.subTotalAmount),
-                    _buildSummaryRow('Diskon Voucher', -cart.discountAmount, isDiscount: true),
+                    _buildSummaryRow('Subtotal Item', cart.subTotalAmount), 
+                    if (cart.discountAmount > 0)
+                      _buildSummaryRow('Diskon Voucher', -cart.discountAmount, isDiscount: true),
+                    
                     const Divider(thickness: 2),
-                    _buildSummaryRow('Total Pembayaran', cart.totalAmount, isTotal: true),
+                    _buildSummaryRow('Total Pembayaran', cart.finalTotalAmount, isTotal: true),
 
                     const SizedBox(height: 15),
 

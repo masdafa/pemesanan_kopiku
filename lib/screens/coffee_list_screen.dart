@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import '../models/coffee.dart';
 import '../providers/cart_provider.dart';
 import '../providers/user_provider.dart';
@@ -11,6 +12,7 @@ import 'cart_screen.dart';
 import 'coffee_detail_screen.dart';
 import 'notification_screen.dart';
 
+// --- WIDGET ITEM GRID ---
 class CoffeeGridItem extends StatelessWidget {
   final Coffee coffee;
   const CoffeeGridItem({super.key, required this.coffee});
@@ -18,80 +20,148 @@ class CoffeeGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favProvider = Provider.of<FavoritesProvider>(context);
+    final theme = Theme.of(context);
 
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => CoffeeDetailScreen(coffee: coffee)));
       },
-      child: Card(
-        elevation: 6,
-        shadowColor: Colors.brown.withAlpha(100),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF6F4E37).withOpacity(0.08),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              child: Hero(
-                tag: coffee.id,
-                child: Image.network(
-                  coffee.imageUrl,
-                  height: 140,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  cacheHeight: 140,
-                  cacheWidth: 300,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return SizedBox(
-                      height: 140,
-                      child: Center(
-                          child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                  : null,
-                              color: Colors.brown.shade300)),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) => Container(
-                      height: 140,
-                      color: Colors.grey.shade200,
-                      child: Center(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.local_cafe, size: 40, color: Colors.brown.shade400),
-                          const Text('Menu Foto', style: TextStyle(color: Colors.grey)),
-                        ],
-                      ))),
+            // Bagian Gambar
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  child: Hero(
+                    tag: coffee.id,
+                    child: Image.asset(
+                      coffee.imageUrl,
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                          height: 150,
+                          color: Colors.grey.shade100,
+                          child: const Icon(Icons.coffee, size: 40, color: Colors.grey)),
+                    ),
+                  ),
                 ),
-              ),
+                // Tombol Favorit
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      shape: BoxShape.circle,
+                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        favProvider.isFavorite(coffee.id) ? Icons.favorite : Icons.favorite_border,
+                        color: favProvider.isFavorite(coffee.id) ? Colors.red : Colors.grey.shade400,
+                        size: 20,
+                      ),
+                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        favProvider.toggleFavorite(coffee.id);
+                      },
+                    ),
+                  ),
+                ),
+                // Rating Pill
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.star_rounded, color: Colors.amber, size: 14),
+                        const SizedBox(width: 4),
+                        Text(
+                          coffee.rating.toString(),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
+            
+            // Bagian Info
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     coffee.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800, 
+                      color: const Color(0xFF4E342E)
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Row(
+                    children: [
+                      Icon(Icons.local_cafe_outlined, size: 12, color: theme.colorScheme.secondary),
+                      const SizedBox(width: 4),
+                      Text(
+                        coffee.category.toString().split('.').last.toUpperCase(),
+                        style: TextStyle(fontSize: 10, color: theme.colorScheme.secondary, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Rp ${coffee.price.toStringAsFixed(0)}', style: TextStyle(color: Colors.green.shade700, fontWeight: FontWeight.bold)),
-                      IconButton(
-                        icon: Icon(
-                          favProvider.isFavorite(coffee.id) ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.red,
-                          size: 24,
+                      Text(
+                        'Rp ${coffee.price.toStringAsFixed(0)}', 
+                        style: TextStyle(
+                          color: theme.colorScheme.primary, 
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        )
+                      ),
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [theme.colorScheme.secondary, Colors.orange.shade700],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 4))],
                         ),
-                        onPressed: () {
-                          favProvider.toggleFavorite(coffee.id);
-                        },
+                        child: const Icon(Icons.add, color: Colors.white, size: 20),
                       ),
                     ],
                   ),
@@ -105,6 +175,7 @@ class CoffeeGridItem extends StatelessWidget {
   }
 }
 
+// --- SCREEN UTAMA ---
 class CoffeeListScreen extends StatefulWidget {
   const CoffeeListScreen({super.key});
 
@@ -115,15 +186,18 @@ class CoffeeListScreen extends StatefulWidget {
 class _CoffeeListScreenState extends State<CoffeeListScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
+  bool _isDelivery = true;
+  String _selectedLocation = "Kopi Kang Dafa - Serang";
 
   @override
   void initState() {
     super.initState();
-    // Fitur: Filter/Pencarian Canggih
     _searchController.addListener(() {
-      setState(() {
-        _searchText = _searchController.text;
-      });
+      if (mounted) {
+        setState(() {
+          _searchText = _searchController.text;
+        });
+      }
     });
   }
   
@@ -133,211 +207,326 @@ class _CoffeeListScreenState extends State<CoffeeListScreen> {
     super.dispose();
   }
 
-  // --- Filter Logik ---
   List<Coffee> _getFilteredCoffees(CoffeeCategory category) {
     final all = dummyCoffees.where((c) => c.category == category).toList();
     if (_searchText.isEmpty) return all;
     return all.where((coffee) => coffee.name.toLowerCase().contains(_searchText.toLowerCase())).toList();
   }
+  
+  IconData _getCategoryIcon(CoffeeCategory category) {
+    switch (category) {
+      case CoffeeCategory.coffee: return Icons.coffee;
+      case CoffeeCategory.nonCoffee: return Icons.local_drink;
+      case CoffeeCategory.seasonal: return Icons.star_border; 
+      case CoffeeCategory.pastry: return Icons.bakery_dining;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context);
-    final user = Provider.of<UserProvider>(context);
+    final theme = Theme.of(context);
 
     return DefaultTabController(
       length: CoffeeCategory.values.length,
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            _buildSliverAppBar(context, user, cart),
-            _buildSearchBox(context),
-
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  isScrollable: true,
-                  labelColor: Colors.brown.shade800,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  unselectedLabelColor: Colors.grey.shade600,
-                  unselectedLabelStyle: const TextStyle(fontSize: 13),
-                  indicatorColor: Colors.brown.shade700,
-                  indicatorWeight: 3,
-                  tabs: CoffeeCategory.values.map((c) => Tab(text: getCategoryName(c))).toList(),
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: SafeArea(
+          child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTopHeader(context),
+                    _buildPromoBanner(context),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-            ),
-            
-            SliverFillRemaining(
-              child: TabBarView(
-                children: CoffeeCategory.values.map((category) {
-                  final coffees = _getFilteredCoffees(category); // Gunakan fungsi filter
-                  if (coffees.isEmpty) {
-                      return const Center(child: Text('Menu tidak ditemukan.'));
-                  }
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(12),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, 
-                      childAspectRatio: 0.7, 
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
+              
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _SliverAppBarDelegate(
+                  Container(
+                    color: theme.scaffoldBackgroundColor,
+                    height: 60, // Set explicit height
+                    child: TabBar(
+                      isScrollable: true,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: const Color(0xFF6F4E37),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicator: BoxDecoration(
+                        gradient: const LinearGradient(colors: [Color(0xFF6F4E37), Color(0xFF8D6E63)]),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+                      ),
+                      dividerColor: Colors.transparent,
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      tabs: CoffeeCategory.values.map((c) => Tab(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(_getCategoryIcon(c), size: 18),
+                              const SizedBox(width: 8),
+                              Text(getCategoryName(c), style: const TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      )).toList(),
                     ),
-                    itemCount: coffees.length,
-                    itemBuilder: (ctx, i) => CoffeeGridItem(coffee: coffees[i]),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  SliverAppBar _buildSliverAppBar(BuildContext context, UserProvider user, CartProvider cart) {
-    final notif = Provider.of<NotificationProvider>(context);
-    return SliverAppBar(
-      expandedHeight: 160,
-      floating: true,
-      snap: true,
-      backgroundColor: Colors.brown.shade700,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.brown.shade800, Colors.brown.shade600],
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // App Logo and Name
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(230),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.coffee, size: 40, color: Colors.brown.shade700),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Kopi Kang Dafa',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Selamat Datang, ${user.username.split(' ')[0]}!',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white.withAlpha(200),
-                  fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ],
+            body: TabBarView(
+              children: CoffeeCategory.values.map((category) {
+                final coffees = _getFilteredCoffees(category);
+                if (coffees.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search_off, size: 80, color: Colors.brown.withOpacity(0.2)),
+                          const SizedBox(height: 16),
+                          Text('Menu tidak ditemukan', style: TextStyle(color: Colors.brown.shade300, fontSize: 16)),
+                        ],
+                      ),
+                    );
+                }
+                return GridView.builder(
+                  key: ValueKey(category), // Add key for stability
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, 
+                    childAspectRatio: 0.65,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 24,
+                  ),
+                  itemCount: coffees.length,
+                  itemBuilder: (ctx, i) => CoffeeGridItem(coffee: coffees[i]),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ),
-      actions: [
-        // Fitur: Notifikasi In-App
-        Stack(
-          children: [
-            IconButton(icon: const Icon(Icons.notifications_none, size: 28), onPressed: () { 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NotificationScreen()));
-             }),
-            if (notif.unreadCount > 0)
-              Positioned(
-                right: 8, top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
-                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: Text(notif.unreadCount.toString(), style: const TextStyle(color: Colors.white, fontSize: 10), textAlign: TextAlign.center),
-                ),
-              )
-          ],
-        ),
-        
-        Stack(
-          children: [
-            IconButton(icon: const Icon(Icons.shopping_bag_outlined, size: 28), onPressed: () { 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CartScreen())); 
-            }),
-            if (cart.itemCount > 0)
-              Positioned(
-                right: 8, top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(color: Colors.redAccent.shade700, borderRadius: BorderRadius.circular(10)),
-                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                  child: Text(cart.itemCount.toString(), style: const TextStyle(color: Colors.white, fontSize: 10), textAlign: TextAlign.center),
-                ),
-              )
-          ],
-        ),
-      ],
     );
   }
-  
-  // Fitur: Kotak Pencarian
-  Widget _buildSearchBox(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-      sliver: SliverToBoxAdapter(
-        child: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Cari menu (mis: Latte, Mocha...)',
-            prefixIcon: const Icon(Icons.search, color: Colors.brown),
-            suffixIcon: _searchText.isNotEmpty ? IconButton(icon: const Icon(Icons.clear, color: Colors.grey), onPressed: () => _searchController.clear()) : null,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            contentPadding: const EdgeInsets.all(15),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.brown.shade200, width: 1.5),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.brown.shade700, width: 2),
+
+  Widget _buildTopHeader(BuildContext context) {
+    final user = Provider.of<UserProvider>(context); // Listen to changes now
+    final theme = Theme.of(context);
+    
+    String displayName = "User";
+    if (user.username.isNotEmpty) {
+      displayName = user.username.split(' ')[0];
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(24.0),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 20, offset: Offset(0, 10))],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text('Halo, ', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      Text(displayName, style: TextStyle(color: theme.colorScheme.secondary, fontWeight: FontWeight.bold, fontSize: 18)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  // ADD LOYALTY POINTS HERE
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.amber.shade200),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.stars, color: Colors.amber.shade700, size: 16),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${user.rewardPoints} Pts', 
+                          style: TextStyle(
+                            color: Colors.amber.shade900, 
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 14
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Consumer<CartProvider>( // Use Consumer for cart badge
+                builder: (ctx, cart, child) => Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(12)),
+                      child: IconButton(
+                        icon: Icon(Icons.shopping_bag_outlined, color: theme.colorScheme.secondary),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen())),
+                      ),
+                    ),
+                    if (cart.itemCount > 0)
+                      Positioned(right: 8, top: 8, child: Container(padding: const EdgeInsets.all(4), decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle), child: Text(cart.itemCount.toString(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)))),
+                  ],
+                ),
+              )
+            ],
+          ),
+          
+          const SizedBox(height: 24),
+          
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Mau ngopi apa hari ini?', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20, color: Color(0xFF4E342E))),
+          ),
+          
+          const SizedBox(height: 16),
+
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: const Color(0xFFF5F5F5), borderRadius: BorderRadius.circular(50)),
+            child: Row(
+              children: [
+                _buildToggleItem("Pickup", !_isDelivery),
+                _buildToggleItem("Delivery", _isDelivery),
+              ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleItem(String title, bool isActive) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _isDelivery = (title == "Delivery")),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: isActive ? [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2))] : [],
+          ),
+          child: Center(
+            child: Text(
+              title, 
+              style: TextStyle(
+                fontWeight: FontWeight.bold, 
+                color: isActive ? const Color(0xFF6F4E37) : Colors.grey
+              )
+            )
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPromoBanner(BuildContext context) {
+    return Container(
+      height: 180,
+      margin: const EdgeInsets.only(top: 20),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          _promoCard(
+            const [Color(0xFF66BB6A), Color(0xFF2E7D32)], 
+            "Buy 1 Get 1", 
+            "Spesial Hari Ini", 
+            Icons.local_offer
+          ),
+          _promoCard(
+            const [Color(0xFFFFA726), Color(0xFFEF6C00)], 
+            "Diskon 50%", 
+            "Pengguna Baru", 
+            Icons.person_add
+          ),
+          _promoCard(
+            const [Color(0xFF8D6E63), Color(0xFF5D4037)], 
+            "Free Delivery", 
+            "Min. 50rb", 
+            Icons.motorcycle
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _promoCard(List<Color> colors, String title, String subtitle, IconData icon) {
+    return Container(
+      width: 260,
+      margin: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [BoxShadow(color: colors[0].withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 6))],
+      ),
+      child: Stack(
+        children: [
+          Positioned(right: -20, bottom: -20, child: Icon(icon, size: 100, color: Colors.white.withOpacity(0.15))),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(12)),
+                child: const Text("PROMO", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+              ),
+              const Spacer(),
+              Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 26, height: 1.0)),
+              const SizedBox(height: 4),
+              Text(subtitle, style: const TextStyle(color: Colors.white70, fontSize: 16)),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
+  _SliverAppBarDelegate(this.child);
 
-  final TabBar _tabBar;
+  final Widget child;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => 60;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => 60;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: _tabBar,
+    return Material( // Wrap with Material
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: shrinkOffset > 5 ? 2.0 : 0.0, // Add elevation on scroll
+      child: child,
     );
   }
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
+    return child != oldDelegate.child; // Rebuild only if child widget changes
   }
 }

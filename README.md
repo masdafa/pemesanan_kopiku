@@ -1,308 +1,143 @@
-# ☕ Kopi Kang Dafa - Coffee Ordering App
+<div align="center">
 
-Aplikasi mobile untuk pemesanan kopi dengan sistem rewards dan voucher yang terintegrasi. Dibangun menggunakan **Flutter** dan **Provider** untuk state management.
+  <h1>☕ Kopi Kang Dafa</h1>
+  
+  <p>
+    <b>Aplikasi Pemesanan Kopi Premium Berbasis Flutter</b>
+  </p>
 
-## 📱 Fitur Utama
+  <p>
+    <a href="#-fitur-unggulan">Fitur</a> •
+    <a href="#-tampilan-aplikasi">Screenshots</a> •
+    <a href="#-teknologi">Teknologi</a> •
+    <a href="#-cara-menjalankan">Instalasi</a>
+  </p>
 
-### 1. **Autentikasi & User Management**
-- ✅ Login dengan kredensial (admin@kopi.com / admin123)
-- ✅ User profile management
-- ✅ Session management dengan logout
-- ✅ Splash screen dengan auto-routing berdasarkan auth status
+  ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
+  ![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
+  ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+  ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-### 2. **Menu Kopi & Pastry**
-- ✅ 4 kategori: Kopi, Non Kopi, Spesial, Pastry
-- ✅ 11 item menu dengan detail lengkap
-- ✅ Search & filter functionality
-- ✅ Favorit management
-- ✅ Image caching untuk optimasi performa
+</div>
 
-### 3. **Shopping Cart & Checkout**
-- ✅ Tambah/hapus item dari cart
-- ✅ Pilih ukuran (Small, Medium, Large)
-- ✅ Pilih suhu (Hot, Iced)
-- ✅ Pilih topping (Boba, Cheese, Choco Chips)
-- ✅ Real-time price calculation
-- ✅ Cart badge di bottom navigation
+<br />
 
-### 4. **Sistem Rewards & Voucher**
-- ✅ Earning poin dari setiap pembelian
-- ✅ Redeem poin menjadi voucher
-- ✅ Apply voucher ke cart untuk diskon
-- ✅ Rewards tracking screen
-- ✅ Unit & widget tests untuk rewards feature
+> **Kopi Kang Dafa** adalah aplikasi *mobile coffee shop* modern yang dirancang untuk memberikan pengalaman pemesanan yang mulus dan estetis. Terinspirasi oleh *coffee chain* terkemuka, aplikasi ini menghadirkan antarmuka Material 3 yang elegan dengan fungsionalitas lengkap mulai dari pemilihan menu hingga sistem loyalitas.
 
-### 5. **Order Management**
-- ✅ Order history
-- ✅ Order tracking
-- ✅ Order status updates
-- ✅ Notifikasi in-app
+---
 
-### 6. **Additional Features**
-- ✅ Dompet/wallet balance
-- ✅ Notifikasi system
-- ✅ Responsive UI design
-- ✅ Indonesian localization
+## ✨ Fitur Unggulan
 
-## 🛠 Tech Stack
+<table>
+  <tr>
+    <td>🛵 <b>Mode Fleksibel</b></td>
+    <td>Pilih antara <b>Pickup</b> (Ambil Sendiri) atau <b>Delivery</b> (Pesan Antar) dengan penyesuaian lokasi otomatis.</td>
+  </tr>
+  <tr>
+    <td>🎨 <b>Modern UI/UX</b></td>
+    <td>Desain antarmuka berbasis <b>Material 3</b> dengan tema <i>Warm Cream & Vibrant Orange</i> yang estetik.</td>
+  </tr>
+  <tr>
+    <td>📋 <b>Katalog Pintar</b></td>
+    <td>Kategori lengkap (Kopi, Non-Kopi, Pastry) dengan detail nutrisi (kalori), rating, dan label <i>Best Seller</i>.</td>
+  </tr>
+  <tr>
+    <td>🥤 <b>Kustomisasi Menu</b></td>
+    <td>Atur tingkat gula, ukuran gelas, suhu (panas/dingin), hingga topping sesuai selera.</td>
+  </tr>
+  <tr>
+    <td>🎟️ <b>Voucher & Promo</b></td>
+    <td>Sistem kode voucher interaktif dan banner promo carousel yang dinamis.</td>
+  </tr>
+  <tr>
+    <td>⭐ <b>Loyalty Rewards</b></td>
+    <td>Kumpulkan poin dari setiap transaksi dan tukarkan dengan voucher diskon eksklusif langsung di aplikasi.</td>
+  </tr>
+  <tr>
+    <td>🛒 <b>Smart Cart</b></td>
+    <td>Manajemen keranjang belanja dengan kalkulasi harga, diskon, dan ongkos kirim otomatis secara <i>real-time</i>.</td>
+  </tr>
+</table>
 
-| Layer | Technology |
-|-------|-----------|
-| **UI Framework** | Flutter 3.9.2 |
-| **State Management** | Provider 6.1.1 |
-| **ID Generation** | UUID 4.5.2 |
-| **Testing** | Flutter Test |
-| **Architecture** | MVVM with Providers |
+## 📱 Tampilan Aplikasi
 
-## 📁 Project Structure
+<div align="center"> 
+  <table>
+    <tr>
+      <td align="center"><b>Home Screen</b></td>
+      <td align="center"><b>Detail Menu</b></td>
+      <td align="center"><b>Checkout</b></td>
+      <td align="center"><b>Tracking Order</b></td>
+    </tr>
+    <tr>
+      <td><img src="https://via.placeholder.com/250x500?text=Home+UI" width="200" /></td>
+      <td><img src="https://via.placeholder.com/250x500?text=Detail+UI" width="200" /></td>
+      <td><img src="https://via.placeholder.com/250x500?text=Checkout+UI" width="200" /></td>
+      <td><img src="https://via.placeholder.com/250x500?text=Tracking+UI" width="200" /></td>
+    </tr>
+  </table>
+</div>
+
+## 🛠️ Teknologi
+
+Project ini dibangun menggunakan teknologi terkini untuk memastikan performa dan skalabilitas:
+
+- **Framework**: [Flutter](https://flutter.dev/) (SDK 3.0+)
+- **Language**: [Dart](https://dart.dev/)
+- **State Management**: [Provider](https://pub.dev/packages/provider)
+- **Networking**: [Cached Network Image](https://pub.dev/packages/cached_network_image) (untuk manajemen gambar & cache)
+- **Architecture**: MVVM (Model-View-ViewModel) pattern
+- **Design System**: Material Design 3
+
+## 📂 Struktur Project
 
 ```
 lib/
-├── main.dart                      # App entry point
-├── models/                        # Data models
-│   ├── coffee.dart               # Coffee model & enums
-│   ├── cart_item.dart            # Cart item model
-│   ├── order.dart                # Order model
-│   ├── voucher.dart              # Voucher model
-│   └── enums.dart                # Shared enumerations
-├── providers/                     # State management
-│   ├── user_provider.dart        # User & auth logic
-│   ├── cart_provider.dart        # Cart management
-│   ├── order_provider.dart       # Order management
-│   ├── favorites_provider.dart   # Favorites logic
-│   └── notification_provider.dart # Notifications
-├── screens/                       # UI screens
-│   ├── splash_screen.dart        # App initialization
-│   ├── auth_screen.dart          # Login & Register
-│   ├── main_tabs_screen.dart     # Main navigation
-│   ├── coffee_list_screen.dart   # Menu listing
-│   ├── coffee_detail_screen.dart # Item details
-│   ├── cart_screen.dart          # Shopping cart
-│   ├── checkout_screen.dart      # Payment flow
-│   ├── order_screen.dart         # Order history
-│   ├── rewards_screen.dart       # Rewards & points
-│   ├── profile_screen.dart       # User profile
-│   └── ...                       # Other screens
-└── widgets/                       # Reusable widgets
-    ├── coffee_item_card.dart     # Coffee card component
-    └── cart_item_widget.dart     # Cart item component
-
-test/
-├── providers/                     # Provider unit tests
-│   └── redeem_unit_test.dart     # Rewards redemption tests
-└── widgets/                       # Widget tests
-    └── rewards_widget_test.dart   # RewardsScreen tests
+├── models/         # Data models (Coffee, CartItem, Voucher, User)
+├── providers/      # State management logic (ChangeNotifier)
+├── screens/        # Halaman UI (Home, Detail, Cart, Profile, Checkout, Tracking)
+├── widgets/        # Komponen UI yang dapat digunakan kembali
+└── main.dart       # Entry point & Tema Global
 ```
 
-## 🚀 Getting Started
+## 🚀 Cara Menjalankan
 
-### Prerequisites
-- Flutter SDK 3.9.2+
-- Dart 3.0+
-- Android SDK / Xcode (untuk build native)
+Ikuti langkah mudah ini untuk menjalankan project di lokal Anda:
 
-### Installation
-
-1. **Clone repository**
+1. **Clone Repository**
    ```bash
-   git clone <repository-url>
-   cd pemesanan_kopiku
+   git clone https://github.com/username-anda/kopi-kang-dafa.git
+   cd kopi-kang-dafa
    ```
 
-2. **Install dependencies**
+2. **Install Dependencies**
    ```bash
    flutter pub get
    ```
 
-3. **Run app**
+3. **Jalankan Aplikasi**
+   Pastikan emulator atau device fisik sudah terhubung.
    ```bash
    flutter run
    ```
 
-4. **Run tests**
-   ```bash
-   flutter test
-   flutter test --coverage
-   ```
+## 🔐 Akun Demo
 
-### Login Credentials
-- **Username**: admin@kopi.com
-- **Password**: admin123
+Gunakan akun ini untuk menguji fitur login dan simulasi profil:
 
-## 📊 Menu Items
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Admin/User** | `admin@kopi.com` | `admin123` |
 
-### ☕ Kopi (3 items)
-- Classic Latte - Rp 30.000
-- Caramel Macchiato - Rp 42.000
-- Iced Americano - Rp 25.000
+> **Tips:** Anda juga bisa menggunakan tombol **"Isi Akun Demo"** di halaman login untuk pengisian otomatis.
 
-### 🥛 Non Kopi (2 items)
-- Mocha Praline - Rp 42.000
-- Matcha Frappe - Rp 38.000
+## 📝 Lisensi
 
-### ❄️ Spesial (2 items)
-- Holiday Spice Latte - Rp 45.000
-- Summer Berry Cooler - Rp 40.000
-
-### 🥐 Pastry (4 items)
-- Croissant Mentega - Rp 35.000
-- Cheese Cake - Rp 48.000
-- Chocolate Donut - Rp 20.000
-- Blueberry Muffin - Rp 32.000
-
-## 🔄 App Flow
-
-```
-SplashScreen
-    ↓
-AuthScreen (login/register)
-    ↓
-MainTabsScreen (4 bottom tabs)
-    ├── Menu (CoffeeListScreen)
-    │   ├── Coffee Detail Screen
-    │   └── Cart Screen
-    ├── Orders (OrderScreen)
-    │   └── Order Tracking
-    ├── Vouchers (VoucherScreen)
-    └── Profile (ProfileScreen)
-        ├── Edit Profile
-        ├── Rewards
-        └── Logout
-```
-
-## 🧪 Testing
-
-Aplikasi dilengkapi dengan comprehensive test coverage:
-
-- **Unit Tests**: 
-  - Rewards redemption logic
-  - Point calculation
-  - Voucher application
-  
-- **Widget Tests**:
-  - RewardsScreen UI
-  - Cart button interactions
-  - Voucher redemption flow
-
-Run tests dengan:
-```bash
-flutter test
-flutter test --coverage
-```
-
-## 🎨 UI/UX Features
-
-- ✨ Branded header dengan "Kopi Kang Dafa" logo
-- 🎯 Bottom navigation untuk easy access
-- 🖼️ Image caching & fallback icons
-- 📱 Responsive design
-- 🌍 Indonesian localization
-- 🔔 In-app notifications badge
-
-## 🔒 Security & Best Practices
-
-- ✅ Input validation pada login form
-- ✅ Safe async/await handling
-- ✅ Error handling dengan user-friendly messages
-- ✅ No hardcoded sensitive data
-- ✅ Proper state management isolation
-- ✅ Code formatting & analysis
-
-## 📋 Recent Updates (Final Version)
-
-### Fitur Baru
-- ✅ Pastry menu dengan 4 items
-- ✅ Branding "Kopi Kang Dafa" di seluruh app
-- ✅ Improved image loading dengan caching
-- ✅ Enhanced UI dengan gradient headers
-- ✅ Rewards system dengan point redemption
-- ✅ Comprehensive test coverage
-
-### Bug Fixes & Improvements
-- ✅ Fixed login/logout flow (splash screen routing)
-- ✅ Improved image caching untuk better performance
-- ✅ Better error handling untuk image loading
-- ✅ Indonesian localization untuk category names
-- ✅ Removed deprecated Flutter APIs
-- ✅ Code formatting & lint compliance
-
-## ✅ Code Quality
-
-```
-flutter analyze    → No issues found! ✅
-flutter test       → All tests passing ✅
-pub get           → All dependencies resolved ✅
-```
-
-## 📸 Screenshots & UI Preview
-
-### Main Screens
-
-| Screen | Preview |
-|--------|---------|
-| **Splash Screen** | Loading state dengan branding "Kopi Kang Dafa" |
-| **Login Screen** | Authentication dengan email & password validation |
-| **Menu List Screen** | 4 tabs (Kopi, Non Kopi, Spesial, Pastry) dengan search functionality |
-| **Coffee Detail** | Product details dengan size, temperature, topping selection |
-| **Shopping Cart** | Cart items dengan real-time price calculation |
-| **Checkout Flow** | Order summary dengan voucher application |
-| **Rewards Screen** | Points progress bar dengan redeem button |
-| **Order History** | List pesanan dengan status tracking |
-| **Profile Screen** | User info, wallet, points, settings |
-| **Notifications** | In-app notification dengan badge counter |
-
-### Key UI Features
-
-🎨 **Design Highlights:**
-- Branded header dengan "Kopi Kang Dafa" logo (coffee icon dalam circular badge)
-- Gradient brown background (professional color scheme)
-- Bottom navigation bar dengan 4 main sections
-- Card-based layout untuk menu items
-- Image caching dengan fallback icons
-- Smooth animations dan transitions
-- Indonesian localization throughout
-- Responsive design untuk berbagai ukuran layar
-
-📱 **User Experience:**
-- Loading indicators untuk async operations
-- Error dialogs dengan user-friendly messages
-- Success notifications via SnackBar
-- Hero animations untuk product images
-- Real-time cart badge counter
-- Notification badges untuk unread items
-
-### How to View UI
-
-Untuk melihat UI aplikasi, jalankan:
-```bash
-flutter run
-```
-
-Kemudian login dengan:
-- Email: `admin@kopi.com`
-- Password: `admin123`
-
-Explore semua menu dan features melalui bottom navigation bar!
-
-## 📝 License
-
-Proyek ini adalah bagian dari tugas kuliah Mobile Development (UTS Flutter).
-
-## 👨‍💻 Author
-
-**Dafa Yunidar**
-
-📚 **Education:**
-- Universitas: Universitas Bina Bangsa
-- Semester: 5
-- Program: Mobile Development
-- Project: UTS Flutter
-
-💬 **Message:**
-> "Kopi Kang Dafa adalah project UTS Flutter saya. Mohon maaf atas segala kekurangannya. Terima kasih telah meluangkan waktu untuk melihat dan mengevaluasi project ini. Semoga bermanfaat! Cheers! ☕"
+Project ini dilisensikan di bawah lisensi [MIT](LICENSE) - bebas untuk digunakan dan dimodifikasi.
 
 ---
 
-**Last Updated**: December 4, 2025  
-**Project Status**: ✅ Production Ready  
-**Version**: 1.0.0
+<div align="center">
+  <b>Dibuat dengan ❤️ oleh Dafa Yunidar</b><br>
+  <i>Jangan lupa berikan ⭐ jika project ini bermanfaat!</i>
+</div>

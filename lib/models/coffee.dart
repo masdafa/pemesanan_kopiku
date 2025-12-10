@@ -3,6 +3,7 @@ enum CoffeeCategory { coffee, nonCoffee, seasonal, pastry }
 enum CoffeeSize { small, medium, large }
 enum CoffeeTemp { hot, iced }
 enum CoffeeTopping { none, boba, cheese, chocoChips }
+enum CoffeeSugar { zero, less, normal } // NEW
 
 String getCategoryName(CoffeeCategory category) {
   switch (category) {
@@ -50,8 +51,19 @@ String getToppingName(CoffeeTopping topping) {
   }
 }
 
+String getSugarName(CoffeeSugar sugar) { // NEW
+  switch (sugar) {
+    case CoffeeSugar.zero:
+      return '0%';
+    case CoffeeSugar.less:
+      return '50%';
+    case CoffeeSugar.normal:
+      return '100%';
+  }
+}
 
-// MODEL COFFEE
+
+// MODEL COFFEE PROFESIONAL
 class Coffee {
   final String id;
   final String name;
@@ -59,6 +71,12 @@ class Coffee {
   final double price; // Harga dasar (asumsi untuk ukuran Medium)
   final String imageUrl;
   final CoffeeCategory category;
+  
+  // New Fields
+  final double rating;
+  final int reviews;
+  final bool isBestSeller;
+  final int calories;
 
   Coffee({
     required this.id,
@@ -67,97 +85,213 @@ class Coffee {
     required this.price,
     required this.imageUrl,
     this.category = CoffeeCategory.coffee,
+    this.rating = 4.5,
+    this.reviews = 0,
+    this.isBestSeller = false,
+    this.calories = 0,
   });
 }
 
-// DUMMY DATA (Ini data statis yang akan digunakan)
+// DUMMY DATA LENGKAP (ASSETS LOKAL - FIXED)
 List<Coffee> dummyCoffees = [
+  // --- KOPI ---
   Coffee(
     id: 'c1',
     name: 'Classic Latte',
-    description: 'Espresso dengan susu steamed yang lembut.',
+    description: 'Espresso full-bodied dipadukan dengan susu steamed lembut dan lapisan foam tipis.',
     price: 30000,
-    imageUrl: 'https://images.unsplash.com/photo-1541167760496-1628856ab220?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/c1.jpg',
     category: CoffeeCategory.coffee,
+    rating: 4.8,
+    reviews: 120,
+    isBestSeller: true,
+    calories: 190,
   ),
   Coffee(
     id: 'c2',
     name: 'Caramel Macchiato',
-    description: 'Perpaduan espresso, susu, dan sirup karamel manis.',
+    description: 'Simfoni rasa espresso, vanilla, dan saus karamel premium yang manis dan legit.',
     price: 42000,
-    imageUrl: 'https://images.unsplash.com/photo-1582299878207-68b1a8d42d31?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/c2.jpg',
     category: CoffeeCategory.coffee,
+    rating: 4.9,
+    reviews: 215,
+    isBestSeller: true,
+    calories: 250,
   ),
   Coffee(
     id: 'c3',
     name: 'Iced Americano',
-    description: 'Sangat menyegarkan. Espresso yang dicampur air dan es.',
+    description: 'Kesegaran murni double shot espresso yang dituangkan di atas es batu kristal.',
     price: 25000,
-    imageUrl: 'https://images.unsplash.com/photo-1521406692052-a5e840d42187?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/c3.jpg',
     category: CoffeeCategory.coffee,
+    rating: 4.6,
+    reviews: 85,
+    calories: 15,
   ),
   Coffee(
+    id: 'c4',
+    name: 'Cappuccino',
+    description: 'Keseimbangan sempurna antara espresso, steamed milk, dan foam tebal yang creamy.',
+    price: 32000,
+    imageUrl: 'assets/images/c4.jpg',
+    category: CoffeeCategory.coffee,
+    rating: 4.7,
+    reviews: 98,
+    calories: 120,
+  ),
+  Coffee(
+    id: 'c5',
+    name: 'Kopi Gula Aren',
+    description: 'Kearifan lokal kopi susu dengan gula aren asli yang legit dan aromatik.',
+    price: 28000,
+    imageUrl: 'assets/images/c5.jpg',
+    category: CoffeeCategory.coffee,
+    rating: 4.9,
+    reviews: 350,
+    isBestSeller: true,
+    calories: 210,
+  ),
+
+  // --- NON KOPI ---
+  Coffee(
     id: 'nc1',
-    name: 'Mocha Praline',
-    description: 'Cokelat kaya rasa dengan sentuhan kacang praline.',
-    price: 42000,
-    imageUrl: 'https://images.unsplash.com/photo-1571408712613-cfd9d2011b9a?fit=crop&w=400&q=80',
+    name: 'Signature Chocolate',
+    description: 'Cokelat Belgia premium yang dilelehkan dengan susu segar. Kaya dan mewah.',
+    price: 38000,
+    imageUrl: 'assets/images/nc1.jpg',
     category: CoffeeCategory.nonCoffee,
+    rating: 4.8,
+    reviews: 145,
+    isBestSeller: true,
+    calories: 320,
   ),
   Coffee(
     id: 'nc2',
-    name: 'Matcha Frappe',
-    description: 'Minuman dingin kental dengan rasa otentik teh hijau Jepang.',
+    name: 'Matcha Latte',
+    description: 'Teh hijau Matcha Uji Jepang asli, diaduk dengan susu hangat. Zen dalam cangkir.',
     price: 38000,
-    imageUrl: 'https://images.unsplash.com/photo-1536762299388-9d48b11c97a7?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/nc2.jpg',
     category: CoffeeCategory.nonCoffee,
+    rating: 4.7,
+    reviews: 110,
+    calories: 180,
   ),
+  Coffee(
+    id: 'nc3',
+    name: 'Taro Latte',
+    description: 'Rasa unik talas ungu yang manis lembut, favorit milenial.',
+    price: 35000,
+    imageUrl: 'assets/images/nc3.jpg',
+    category: CoffeeCategory.nonCoffee,
+    rating: 4.5,
+    reviews: 60,
+    calories: 220,
+  ),
+  Coffee(
+    id: 'nc4',
+    name: 'Red Velvet Latte',
+    description: 'Minuman berwarna merah menggoda dengan rasa cocoa dan buttermilk.',
+    price: 36000,
+    imageUrl: 'assets/images/nc4.jpg',
+    category: CoffeeCategory.nonCoffee,
+    rating: 4.6,
+    reviews: 75,
+    calories: 240,
+  ),
+
+  // --- SEASONAL ---
   Coffee(
     id: 's1',
     name: 'Holiday Spice Latte',
-    description: 'Menu spesial musiman dengan campuran rempah hangat.',
+    description: 'Edisi terbatas! Campuran rempah kayu manis, cengkeh, dan espresso.',
     price: 45000,
-    imageUrl: 'https://images.unsplash.com/photo-1546738549-906d9b93b2a2?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/s1.jpg',
     category: CoffeeCategory.seasonal,
+    rating: 4.8,
+    reviews: 40,
+    calories: 280,
   ),
   Coffee(
     id: 's2',
     name: 'Summer Berry Cooler',
-    description: 'Minuman dingin menyegarkan dengan campuran buah berry segar.',
+    description: 'Sparkling soda dengan potongan buah berry asli. Sangat menyegarkan!',
     price: 40000,
-    imageUrl: 'https://images.unsplash.com/photo-1552566085-f5b9d36e2f17?fit=crop&w=400&q=80',
+    imageUrl: 'assets/images/s2.jpg',
     category: CoffeeCategory.seasonal,
+    rating: 4.7,
+    reviews: 55,
+    calories: 140,
   ),
   Coffee(
+    id: 's3',
+    name: 'Avocado Coffee',
+    description: 'Jus alpukat mentega kental disiram espresso shot. Creamy dan bold.',
+    price: 48000,
+    imageUrl: 'assets/images/s3.jpg',
+    category: CoffeeCategory.seasonal,
+    rating: 4.9,
+    reviews: 80,
+    isBestSeller: true,
+    calories: 350,
+  ),
+
+  // --- PASTRY ---
+  Coffee(
     id: 'p1',
-    name: 'Croissant Mentega',
-    description: 'Pastry renyah dengan lapisan mentega yang lezat.',
-    price: 35000,
-    imageUrl: 'https://images.unsplash.com/photo-1585518419759-c1f448bf21cc?fit=crop&w=400&q=80',
+    name: 'Butter Croissant',
+    description: 'Croissant klasik Prancis dengan lapisan layer mentega yang renyah dan gurih.',
+    price: 25000,
+    imageUrl: 'assets/images/p1.jpg',
     category: CoffeeCategory.pastry,
+    rating: 4.8,
+    reviews: 130,
+    isBestSeller: true,
+    calories: 260,
   ),
   Coffee(
     id: 'p2',
-    name: 'Cheese Cake',
-    description: 'Kue keju yang lembut dan creamy dengan rasa nikmat.',
-    price: 48000,
-    imageUrl: 'https://images.unsplash.com/photo-1621394686414-8c26a9dac28c?fit=crop&w=400&q=80',
+    name: 'New York Cheesecake',
+    description: 'Cheesecake panggang padat namun lembut dengan crust biskuit.',
+    price: 45000,
+    imageUrl: 'assets/images/p2.jpg',
     category: CoffeeCategory.pastry,
+    rating: 4.9,
+    reviews: 90,
+    calories: 400,
   ),
   Coffee(
     id: 'p3',
-    name: 'Chocolate Donut',
-    description: 'Donat cokelat empuk dengan topping cokelat glossy.',
-    price: 20000,
-    imageUrl: 'https://images.unsplash.com/photo-1585621081563-430f63602d4b?fit=crop&w=400&q=80',
+    name: 'Chocolate Glazed Donut',
+    description: 'Donat ragi empuk dicelup dalam ganache cokelat pekat.',
+    price: 18000,
+    imageUrl: 'assets/images/p3.jpg',
     category: CoffeeCategory.pastry,
+    rating: 4.5,
+    reviews: 65,
+    calories: 290,
   ),
   Coffee(
     id: 'p4',
     name: 'Blueberry Muffin',
-    description: 'Muffin lembut dengan blueberry segar yang manis asam.',
-    price: 32000,
-    imageUrl: 'https://images.unsplash.com/photo-1598080785009-e1c4bc62d85d?fit=crop&w=400&q=80',
+    description: 'Muffin vanila moist penuh dengan ledakan buah blueberry segar.',
+    price: 28000,
+    imageUrl: 'assets/images/p4.jpg',
     category: CoffeeCategory.pastry,
+    rating: 4.6,
+    reviews: 45,
+    calories: 340,
+  ),
+  Coffee(
+    id: 'p5',
+    name: 'Beef Sausage Roll',
+    description: 'Sosis sapi premium dibalut puff pastry renyah.',
+    price: 32000,
+    imageUrl: 'assets/images/p5.jpg',
+    category: CoffeeCategory.pastry,
+    rating: 4.7,
+    reviews: 70,
+    calories: 310,
   ),
 ];

@@ -6,6 +6,7 @@ class CartItem extends ChangeNotifier {
   final CoffeeSize size;
   final CoffeeTemp temp;
   final CoffeeTopping topping;
+  final CoffeeSugar sugar; // NEW
   int quantity;
 
   CartItem({
@@ -13,6 +14,7 @@ class CartItem extends ChangeNotifier {
     required this.size,
     required this.temp,
     this.topping = CoffeeTopping.none,
+    this.sugar = CoffeeSugar.normal, // Default normal 100%
     required this.quantity,
   });
 
@@ -59,6 +61,7 @@ class CartItem extends ChangeNotifier {
   String get sizeString => getSizeName(size);
   String get tempString => getTempName(temp);
   String get toppingString => getToppingName(topping);
+  String get sugarString => getSugarName(sugar);
 
 
   // *** METHODS UNTUK MENGUBAH KUANTITAS ***
@@ -83,6 +86,7 @@ class CartItem extends ChangeNotifier {
       'size': size.toString().split('.').last,
       'temp': temp.toString().split('.').last,
       'topping': topping.toString().split('.').last,
+      'sugar': sugar.toString().split('.').last,
       'quantity': quantity,
       'pricePerItem': adjustedPrice,
       'totalPrice': totalAmount,

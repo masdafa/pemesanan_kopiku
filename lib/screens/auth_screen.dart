@@ -18,10 +18,28 @@ class __LoginWidgetState extends State<_LoginWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final Map<String, String> _authData = {'username': '', 'password': ''};
   
+  // Controller untuk fitur "Isi Demo"
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+
   void _saveForm() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
     widget.onSubmit(_authData['username']!, _authData['password']!);
+  }
+
+  void _fillDemoAccount() {
+    setState(() {
+      _userController.text = 'admin@kopi.com';
+      _passController.text = 'admin123';
+    });
+  }
+
+  @override
+  void dispose() {
+    _userController.dispose();
+    _passController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,8 +49,14 @@ class __LoginWidgetState extends State<_LoginWidget> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            decoration: const InputDecoration(labelText: 'Username (Coba: admin@kopi.com)', border: OutlineInputBorder()),
-            keyboardType: TextInputType.text,
+            controller: _userController,
+            decoration: InputDecoration(
+              labelText: 'Email / Username', 
+              prefixIcon: const Icon(Icons.person_outline),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
             validator: (value) {
               if (value!.isEmpty) { return 'Masukkan Username!'; }
               return null;
@@ -41,25 +65,43 @@ class __LoginWidgetState extends State<_LoginWidget> {
           ),
           const SizedBox(height: 15),
           TextFormField(
-            decoration: const InputDecoration(labelText: 'Password (Coba: admin123)', border: OutlineInputBorder()),
+            controller: _passController,
+            decoration: InputDecoration(
+              labelText: 'Password', 
+              prefixIcon: const Icon(Icons.lock_outline),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
             obscureText: true,
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) => _saveForm(),
             validator: (value) {
               if (value!.isEmpty || value.length < 5) { return 'Password minimal 5 karakter!'; }
               return null;
             },
             onSaved: (value) { _authData['password'] = value!; },
           ),
-          const SizedBox(height: 30),
+          
+          // Tombol Bantuan Demo (Opsional untuk Portfolio)
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: _fillDemoAccount,
+              child: const Text('Isi Akun Demo', style: TextStyle(fontSize: 12)),
+            ),
+          ),
+          
+          const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _saveForm,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown.shade700,
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('LOGIN', style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: const Text('MASUK', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -74,15 +116,31 @@ class _RegisterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Kita buat tampilan sederhana untuk Register
     return Column(
       children: [
-        const TextField(decoration: InputDecoration(labelText: 'Nama Lengkap', border: OutlineInputBorder())),
+        TextField(
+          decoration: InputDecoration(
+            labelText: 'Nama Lengkap', 
+            prefixIcon: const Icon(Icons.person_outline),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          )
+        ),
         const SizedBox(height: 15),
-        const TextField(decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()), keyboardType: TextInputType.emailAddress),
+        TextField(
+          decoration: InputDecoration(
+            labelText: 'Email', 
+            prefixIcon: const Icon(Icons.email_outlined),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ), 
+          keyboardType: TextInputType.emailAddress
+        ),
         const SizedBox(height: 15),
-        const TextField(
-          decoration: InputDecoration(labelText: 'Password Baru', border: OutlineInputBorder()),
+        TextField(
+          decoration: InputDecoration(
+            labelText: 'Password Baru', 
+            prefixIcon: const Icon(Icons.lock_outline),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
           obscureText: true,
         ),
         const SizedBox(height: 30),
@@ -90,15 +148,21 @@ class _RegisterWidget extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // Simulasikan pendaftaran berhasil dan redirect ke login
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Pendaftaran Berhasil! Silakan Login.'), backgroundColor: Colors.green.shade700));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Pendaftaran Berhasil! Silakan Login.'), 
+                  backgroundColor: Colors.green.shade700,
+                  behavior: SnackBarBehavior.floating,
+                )
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green.shade700,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: const Text('DAFTAR SEKARANG', style: TextStyle(color: Colors.white, fontSize: 16)),
+            child: const Text('DAFTAR SEKARANG', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
         ),
       ],
@@ -106,7 +170,7 @@ class _RegisterWidget extends StatelessWidget {
   }
 }
 
-// --- LAYAR OTENTIKASI UTAMA (MENGGUNAKAN TAB BAR) ---
+// --- LAYAR OTENTIKASI UTAMA ---
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -123,6 +187,7 @@ class _AuthScreenState extends State<AuthScreen> {
       builder: (ctx) => AlertDialog(
         title: const Text('Terjadi Kesalahan'),
         content: Text(message),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         actions: <Widget>[
           TextButton(child: const Text('OK'), onPressed: () { Navigator.of(ctx).pop(); }),
         ],
@@ -159,63 +224,109 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final theme = Theme.of(context);
     
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.brown.shade50,
+        backgroundColor: theme.colorScheme.surface,
         body: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                // Header Logo Section
                 Container(
-                  margin: const EdgeInsets.only(top: 50, bottom: 30.0),
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 90),
-                  decoration: BoxDecoration(
-                    color: Colors.brown.shade700,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [BoxShadow(blurRadius: 8, color: Colors.black26, offset: Offset(0, 2))],
-                  ),
-                  child: const Text('Kopi Kang Dafa', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
-                ),
-                
-                Container(
-                  width: deviceSize.width * 0.9,
-                  padding: const EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black12)],
-                  ),
+                  margin: const EdgeInsets.only(bottom: 40.0),
                   child: Column(
                     children: [
-                      TabBar(
-                        labelColor: Colors.brown.shade800,
-                        unselectedLabelColor: Colors.grey,
-                        indicatorColor: Colors.green.shade700,
-                        tabs: const [
-                          Tab(text: 'LOGIN'),
-                          Tab(text: 'DAFTAR'),
-                        ],
-                      ),
-                      const Divider(height: 30),
-                      
-                      SizedBox(
-                        height: 350,
-                        child: TabBarView(
-                          children: [
-                            _isLoading 
-                              ? const Center(child: CircularProgressIndicator())
-                              : _LoginWidget(onSubmit: _submitAuth),
-                            
-                            const _RegisterWidget(),
-                          ],
+                       Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withOpacity(0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            )
+                          ]
                         ),
-                      ),
+                        child: const Icon(Icons.coffee, size: 50, color: Colors.white),
+                       ),
+                       const SizedBox(height: 20),
+                       Text(
+                         'Kopi Kang Dafa', 
+                         style: theme.textTheme.headlineMedium?.copyWith(
+                           color: theme.colorScheme.primary, 
+                           fontWeight: FontWeight.bold
+                         )
+                       ),
+                       const SizedBox(height: 8),
+                       Text(
+                         'Nikmati kopi terbaik hari ini',
+                         style: TextStyle(color: Colors.grey.shade600),
+                       ),
                     ],
                   ),
                 ),
+                
+                Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  elevation: 5,
+                  shadowColor: Colors.black.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  child: Container(
+                    width: deviceSize.width,
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: TabBar(
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.grey.shade600,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            indicator: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: theme.colorScheme.primary,
+                            ),
+                            dividerColor: Colors.transparent,
+                            tabs: const [
+                              Tab(text: 'MASUK'),
+                              Tab(text: 'DAFTAR'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        
+                        SizedBox(
+                          height: 360, // Adjusted height
+                          child: TabBarView(
+                            children: [
+                              _isLoading 
+                                ? Center(child: CircularProgressIndicator(color: theme.colorScheme.primary))
+                                : _LoginWidget(onSubmit: _submitAuth),
+                              
+                              const _RegisterWidget(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 30),
+                Text(
+                  'v1.0.0 © 2024 Dafa Yunidar',
+                  style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                )
               ],
             ),
           ),
