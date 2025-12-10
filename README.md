@@ -26,6 +26,27 @@
 
 ---
 
+## 👤 Identitas Pengembang
+
+<table>
+  <tr>
+    <td><b>Nama</b></td>
+    <td>: Dafa Naufal Yunidar</td>
+  </tr>
+  <tr>
+    <td><b>NIM</b></td>
+    <td>: 14022300026</td>
+  </tr>
+  <tr>
+    <td><b>Universitas</b></td>
+    <td>: Universitas Bina Bangsa</td>
+  </tr>
+</table>
+
+> **Catatan:** Mohon maaf atas segala kekurangan yang terdapat dalam project ini. Masukan dan saran sangat diharapkan untuk pengembangan lebih lanjut.
+
+---
+
 ## ✨ Fitur Unggulan
 
 <table>
