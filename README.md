@@ -91,10 +91,11 @@
       <td align="center"><b>Tracking Order</b></td>
     </tr>
     <tr>
-      <td><img src="https://via.placeholder.com/250x500?text=Home+UI" width="200" /></td>
-      <td><img src="https://via.placeholder.com/250x500?text=Detail+UI" width="200" /></td>
-      <td><img src="https://via.placeholder.com/250x500?text=Checkout+UI" width="200" /></td>
-      <td><img src="https://via.placeholder.com/250x500?text=Tracking+UI" width="200" /></td>
+      <!-- GANTI "screenshots/..." dengan nama folder dan file gambar lokal Anda yang sebenarnya -->
+      <td><img src="screenshots/home.jpg" width="200" alt="Home Screen" /></td>
+      <td><img src="screenshots/detail.jpg" width="200" alt="Detail Screen" /></td>
+      <td><img src="screenshots/checkout.jpg" width="200" alt="Checkout Screen" /></td>
+      <td><img src="screenshots/tracking.jpg" width="200" alt="Tracking Screen" /></td>
     </tr>
   </table>
 </div>
